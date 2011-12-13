@@ -28,3 +28,6 @@ Example
 
 ## asset_folder
   ember.js  
+
+### Install
+  npm node-make-asset-pipeline
