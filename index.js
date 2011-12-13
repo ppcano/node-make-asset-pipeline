@@ -4,8 +4,6 @@ var parse = require('url').parse
   , exec = require('child_process').exec
   , path = require('path');
 
-exports.version = '0.0.2';
-
 exports = module.exports = function make(options){
   options = options || {};
 
@@ -20,10 +18,9 @@ exports = module.exports = function make(options){
     cmd_name = options.monitors[i].name;
     cmd_watch = options.monitors[i].watch;
 
-    var module_path = process.cwd() +'/node_modules/'+ cmd_watch; 
+    var module_path = process.cwd() +'/'+ cmd_watch; 
 
-
-    console.log( module_path );
+    //console.log( module_path );
 
 
     watch.createMonitor( module_path, function (monitor) {

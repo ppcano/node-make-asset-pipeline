@@ -7,9 +7,7 @@ Each time a request for an asset is coming, the make command for the specific as
 ## Set up express server 
 
 ```js
-var app = express.createServer(
-    , require('node-make-asset-pipeline')({asset: 'assets', monitors: [ { name: 'ember', watch: 'ember/packages' } ]})
-); 
+  app.use( require('node-make-asset-pipeline')({asset: 'assets', monitors: [ { name: 'ember', watch: 'packages/ember.js/packages' } ]}) );
 ```
 
 ## Create makefile 
@@ -21,11 +19,11 @@ Example
 
   ember:
 
-    cd ./node_modules/ember; \
+    cd ./packages/ember.js; \
       rake clean; \
       rake 
 
-    cp -pr ./node_modules/ember/dist/ember.js assets/ember.js
+    cp -pr ./packages/ember.js/dist/ember.js assets/ember.js
 
 
 ## asset_folder
