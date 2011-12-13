@@ -1,0 +1,18 @@
+{
+  "author": "Pepe Cano",
+  "name": "node-make-asset-pipeline",
+  "description": "An asset pipeline which retrieves assets depending on makefile commands",
+  "version": "0.0.1",
+  "homepage": "http://github.com/ppcano/node-make-asset-pipeline",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ppcano/node-make-asset-pipeline.git"
+  },
+  "keywords": ["assets", "makefile", "pipeline"],
+  "main": "lib/index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
+

@@ -1,0 +1,31 @@
+
+# Asset middleware
+This middleware is intended to be used on development in a browser environment
+Each time a request for an asset is coming, the make command for the specific asset ( convention naming ) is executed
+
+## Set up express server 
+var app = express.createServer(
+     require('node-make-asset-pipeline')({asset: 'asset_folder'})
+); 
+
+## Create makefile 
+
+  jquery:
+
+    ender build jQuery --output ./assets/jquery --debug 
+
+  underscore:
+
+    ender build underscore --output ./assets/underscore --debug 
+
+  ember:
+
+    cd ~/pathto/ember.js/; \
+      rake clean; \
+      rake 
+  app:
+    
+    cp -pr lib/app.js assets/app.js
+
+
+
