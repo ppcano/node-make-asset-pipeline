@@ -1,14 +1,22 @@
 
 # Asset middleware
+
 This middleware is intended to be used on development in a browser environment
 Each time a request for an asset is coming, the make command for the specific asset ( convention naming ) is executed
 
 ## Set up express server 
+
+```js
 var app = express.createServer(
      require('node-make-asset-pipeline')({asset: 'asset_folder'})
 ); 
+```
 
 ## Create makefile 
+
+In order to work, each command must output a file with the same name as the command
+
+Example
 
   jquery:
 
@@ -27,5 +35,7 @@ var app = express.createServer(
     
     cp -pr lib/app.js assets/app.js
 
-
-
+## asset_folder
+  jquery.js  
+  jquery.js  
+  ember.js  
