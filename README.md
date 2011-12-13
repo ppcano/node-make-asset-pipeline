@@ -8,7 +8,7 @@ Each time a request for an asset is coming, the make command for the specific as
 
 ```js
 var app = express.createServer(
-     require('node-make-asset-pipeline')({asset: 'asset_folder'})
+    , require('node-make-asset-pipeline')({asset: 'assets', monitors: [ { name: 'ember', watch: 'ember/packages' } ]})
 ); 
 ```
 
@@ -18,24 +18,15 @@ In order to work, each command must output a file with the same name as the comm
 
 Example
 
-  jquery:
-
-    ender build jQuery --output ./assets/jquery --debug 
-
-  underscore:
-
-    ender build underscore --output ./assets/underscore --debug 
 
   ember:
 
-    cd ~/pathto/ember.js/; \
+    cd ./node_modules/ember; \
       rake clean; \
       rake 
-  app:
-    
-    cp -pr lib/app.js assets/app.js
+
+    cp -pr ./node_modules/ember/dist/ember.js assets/ember.js
+
 
 ## asset_folder
-  jquery.js  
-  jquery.js  
   ember.js  

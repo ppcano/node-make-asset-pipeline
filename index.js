@@ -1,15 +1,53 @@
 var parse = require('url').parse
   , sys = require('sys')
+  , watch = require('watch')
   , exec = require('child_process').exec
   , path = require('path');
 
-exports.version = '0.0.1';
+exports.version = '0.0.2';
 
 exports = module.exports = function make(options){
   options = options || {};
 
   var asset = options.asset || 'assets';
   var folder = process.cwd() +'/'+asset;
+  var monitors = {};
+  var i, cmd_name, cmd_watch;
+  
+
+  for ( i=options.monitors.length; i--; ) {
+
+    cmd_name = options.monitors[i].name;
+    cmd_watch = options.monitors[i].watch;
+
+    var module_path = process.cwd() +'/node_modules/'+ cmd_watch; 
+
+
+    console.log( module_path );
+
+
+    watch.createMonitor( module_path, function (monitor) {
+
+      monitor.isChanged = false;
+      monitor.on("created", function (f, stat) {
+        this.isChanged = true;
+      })
+      monitor.on("changed", function (f, curr, prev) {
+        this.isChanged = true;
+      })
+      monitor.on("removed", function (f, stat) {
+        //console.log ( ' changed..................'); 
+        this.isChanged = true;
+      })
+
+      monitors[cmd_name] = monitor;
+
+    });  
+
+
+
+  }
+  
 
   if ( !path.existsSync( folder ) ) {
     throw new Error('asset folder not available at '+ folder );
@@ -24,8 +62,6 @@ exports = module.exports = function make(options){
       
       var asset_path = '/'+asset+'/';
 
-
-
       if ( pathname.slice(0, asset_path.length) === asset_path  ) {
 
         var filename =  pathname.slice( asset_path.length, pathname.length );
@@ -35,16 +71,26 @@ exports = module.exports = function make(options){
         if ( lastDot >= 0) {
 
             var command = filename.slice(0, lastDot);
+            var filepath = folder +'/'+filename;
 
-            exec( 'make '+command, function(error, stdout, stderr ) {
+            console.log ( command );
 
-              if ( !error ) {
-                var filepath = folder +'/'+filename;
-                res.sendfile(filepath);
+            if ( monitors[command].isChanged ) {
 
-              } else throw error;
+              monitors[command].isChanged = false;
+              exec( 'make '+command, function(error, stdout, stderr ) {
 
-            });
+                if ( !error ) {
+
+                  res.sendfile(filepath);
+
+                } else throw error;
+
+              }); 
+
+            } else {
+                  res.sendfile(filepath);
+            }
 
 
 
@@ -58,8 +104,6 @@ exports = module.exports = function make(options){
     } else  return next(); 
 
   }
-
-
 
 };
 
