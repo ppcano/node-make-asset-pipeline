@@ -27,13 +27,15 @@ exports = module.exports = function make(options){
 
       monitor.isChanged = false;
       monitor.on("created", function (f, stat) {
+        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
         this.isChanged = true;
       })
       monitor.on("changed", function (f, curr, prev) {
+        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
         this.isChanged = true;
       })
       monitor.on("removed", function (f, stat) {
-        //console.log ( ' changed..................'); 
+        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
         this.isChanged = true;
       })
 
@@ -70,24 +72,27 @@ exports = module.exports = function make(options){
             var command = filename.slice(0, lastDot);
             var filepath = folder +'/'+filename;
 
-            console.log ( command );
+            
+            if ( monitors[command] ) {
 
-            if ( monitors[command].isChanged ) {
+              if ( monitors[command].isChanged ) {
 
-              monitors[command].isChanged = false;
-              exec( 'make '+command, function(error, stdout, stderr ) {
+                monitors[command].isChanged = false;
+                exec( 'make '+command, function(error, stdout, stderr ) {
 
-                if ( !error ) {
+                  if ( !error ) {
 
-                  res.sendfile(filepath);
+                    res.sendfile(filepath);
 
-                } else throw error;
+                  } else throw error;
 
-              }); 
+                }); 
 
-            } else {
-                  res.sendfile(filepath);
-            }
+              } else {
+                    res.sendfile(filepath);
+              }
+
+            } else  return next(); 
 
 
 
