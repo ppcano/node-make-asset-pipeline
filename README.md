@@ -1,8 +1,11 @@
 
 # Asset middleware
 
-This middleware is intended to be used on development in a browser environment
-Each time a request for an asset is coming, the make command for the specific asset ( convention naming ) is executed
+Decrease dev/testing period rebuilding on demand assets (with make commands) which has been updated. 
+
+Each time a GET request for an asset ( specified on the monitor options ) is received:  
+ - the make command for the specific asset ( convention naming ) is executed, and after the execution the asset is retrieved.
+ - On production, make commands are not executed and only retrieves the specific asset.
 
 ## Set up express server 
 
@@ -14,7 +17,7 @@ Each time a request for an asset is coming, the make command for the specific as
 
 In order to work, each command must output a file with the same name as the command
 
-Example
+Makefile
 
 
   ember:

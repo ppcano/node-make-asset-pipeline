@@ -10,8 +10,8 @@ exports = module.exports = function make(options){
   var asset = options.asset || 'assets';
   var folder = process.cwd() +'/'+asset;
   var monitors = {};
+  var isAvailableCommand = {};
   var i, cmd_name, cmd_watch;
-  
 
   for ( i=options.monitors.length; i--; ) {
 
@@ -20,33 +20,36 @@ exports = module.exports = function make(options){
 
     var module_path = process.cwd() +'/'+ cmd_watch; 
 
+    isAvailableCommand[cmd_name] = true; // to know on production
     //console.log( module_path );
+    
+    // production won't create monitor
+    if ( process.env.NODE_ENV !== 'production' ) {
 
+      watch.createMonitor( module_path, function (monitor) {
 
-    watch.createMonitor( module_path, function (monitor) {
+        monitor.isChanged = false;
+        monitor.on("created", function (f, stat) {
+          console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
+          this.isChanged = true;
+        })
+        monitor.on("changed", function (f, curr, prev) {
+          console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
+          this.isChanged = true;
+        })
+        monitor.on("removed", function (f, stat) {
+          console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
+          this.isChanged = true;
+        })
 
-      monitor.isChanged = false;
-      monitor.on("created", function (f, stat) {
-        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
-        this.isChanged = true;
-      })
-      monitor.on("changed", function (f, curr, prev) {
-        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
-        this.isChanged = true;
-      })
-      monitor.on("removed", function (f, stat) {
-        console.log ( '\033[32 m >>> node make watch...... \033[0m' ); 
-        this.isChanged = true;
-      })
+        monitors[cmd_name] = monitor;
 
-      monitors[cmd_name] = monitor;
+      });  
 
-    });  
-
+    }
 
 
   }
-  
 
   if ( !path.existsSync( folder ) ) {
     throw new Error('asset folder not available at '+ folder );
@@ -73,9 +76,9 @@ exports = module.exports = function make(options){
             var filepath = folder +'/'+filename;
 
             
-            if ( monitors[command] ) {
+            if ( isAvailableCommand[command] ) {
 
-              if ( monitors[command].isChanged ) {
+              if ( process.env.NODE_ENV !== 'production' &&  monitors[command].isChanged ) {
 
                 monitors[command].isChanged = false;
                 exec( 'make '+command, function(error, stdout, stderr ) {
@@ -89,7 +92,9 @@ exports = module.exports = function make(options){
                 }); 
 
               } else {
-                    res.sendfile(filepath);
+                //  sendfile on production or package has not been changed
+                res.sendfile(filepath);
+
               }
 
             } else  return next(); 
