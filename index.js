@@ -1,5 +1,5 @@
 var parse = require('url').parse
-  , sys = require('sys')
+  , util = require('util')
   , watch = require('watch')
   , exec = require('child_process').exec
   , path = require('path');
