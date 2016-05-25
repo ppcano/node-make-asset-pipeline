@@ -51,7 +51,7 @@ exports = module.exports = function make(options){
 
   }
 
-  if ( !path.existsSync( folder ) ) {
+  if ( !fs.existsSync( folder ) ) {
     throw new Error('asset folder not available at '+ folder );
   }
 
